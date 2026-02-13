@@ -1,0 +1,20 @@
+{
+  "name": "auction-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "exceljs": "^4.4.0",
+    "express": "^4.18.2",
+    "mongodb": "4.1",
+    "mongoose": "^7.0.0",
+    "multer": "^2.0.2",
+    "pdfkit": "^0.17.2",
+    "react-router-dom": "^7.13.0"
+  }
+}
