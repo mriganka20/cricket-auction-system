@@ -14,6 +14,7 @@ export default function Auction() {
   const [showSold, setShowSold] = useState(false);
 
   const API = process.env.REACT_APP_API_URL;
+  console.log("API URL:", process.env.REACT_APP_API_URL);
 
   useEffect(() => {
     fetchData();
