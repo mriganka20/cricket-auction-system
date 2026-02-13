@@ -5,23 +5,23 @@ import { Link } from "react-router-dom";
 
 export default function Status() {
 
-  const [players,setPlayers] = useState([]);
+  const [players, setPlayers] = useState([]);
   const API = process.env.REACT_APP_API_URL;
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchData();
-  },[]);
+  }, []);
 
   const fetchData = async () => {
     const res = await axios.get(`${API}/data`);
     setPlayers(res.data.players);
   };
 
-  const sold = players.filter(p=>p.status==="sold");
-  const unsold = players.filter(p=>p.status==="unsold");
+  const sold = players.filter(p => p.status === "sold");
+  const unsold = players.filter(p => p.status === "unsold");
 
   return (
-    <div style={{ padding:"20px", color:"white" }}>
+    <div style={{ padding: "20px", color: "white" }}>
       <Link to="/">⬅ Back</Link>
 
       <h2>Sold Players</h2>

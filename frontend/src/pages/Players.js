@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Players() {
 
   const [players, setPlayers] = useState([]);
   const API = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
   useEffect(() => {
     fetchPlayers();
   }, []);
@@ -17,7 +19,13 @@ export default function Players() {
   return (
     <div>
       <h2 style={styles.title}>All Players</h2>
-
+      <div style={styles.topBar}>
+        <button
+          style={styles.addBtn}
+          onClick={() => navigate("/add-player")}>
+          Add Player
+        </button>
+      </div>
       <div style={styles.grid}>
         {players.map(p => (
           <div key={p._id} style={styles.card}>
@@ -42,11 +50,12 @@ export default function Players() {
 
 const styles = {
   title: {
-    marginBottom: "20px"
+    marginBottom: "20px",
+    marginTop: "5px"
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
     gap: "20px"
   },
   card: {
@@ -57,9 +66,10 @@ const styles = {
   },
   image: {
     width: "100%",
-    height: "200px",
+    height: "250px",
     objectFit: "contain",
-    borderRadius: "10px"
+    borderRadius: "10px",
+    display: "block"
   },
   sold: {
     background: "red",
@@ -79,5 +89,22 @@ const styles = {
     color: "#ffd700",
     fontWeight: "600",
     margin: "0"              // 🔥 remove default paragraph margin
+  },
+  topBar: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop: "-50px",
+    marginBottom: "10px"
+  },
+  addBtn: {
+    background: "#28a745",
+    color: "#fff",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "8px",
+    fontWeight: "600",
+    cursor: "pointer",
+    fontSize: "15px",
+    transition: "all 0.2s ease"
   }
 };

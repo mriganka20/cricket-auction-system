@@ -66,7 +66,10 @@ export default function Auction() {
   };
 
   const closeAuction = async () => {
-    if (!player || !selectedTeam) return;
+    if (!player || !selectedTeam) {
+      alert("No team has placed a bid yet!");
+      return;
+    }
 
     setShowSold(true);
 
@@ -178,12 +181,12 @@ export default function Auction() {
 const styles = {
   page: {
     display: "flex",
-    gap: "40px",
-    justifyContent: "center",
-    alignItems: "flex-start"
+    flexWrap: "wrap",        // 🔥 allows stacking
+    gap: "20px",
+    justifyContent: "center"
   },
   leftPanel: {
-    flex: 1,
+    flex: "1 1 500px",
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start" // prevents vertical stretch
@@ -195,6 +198,7 @@ const styles = {
     borderRadius: "20px",
     padding: "5px 15px 10px 15px", // 🔥 reduced top padding
     display: "flex",
+    flex: "1 1 200px",
     flexDirection: "column"
   },
   title: {
@@ -216,22 +220,32 @@ const styles = {
     display: "flex",
     gap: "10px"
   },
-  bidBtn: {
-    flex: 1,
-    background: "#28a745",
-    border: "none",
-    padding: "10px",
-    color: "white",
-    borderRadius: "8px"
-  },
+bidBtn: {
+  flex: 1,
+  background: "#28a745",
+  border: "none",
+  padding: "8px 12px",   // slightly taller
+  color: "white",
+  borderRadius: "8px",
+  fontSize: "15px",       // 🔥 increased
+  fontWeight: "700",      // 🔥 bold
+  letterSpacing: "0.5px",
+  cursor: "pointer"
+},
   closeBtn: {
-    flex: 1,
-    background: "#dc3545",
-    border: "none",
-    padding: "10px",
-    color: "white",
-    borderRadius: "8px"
-  },
+  flex: 1,
+  background: "linear-gradient(135deg, #dc3545, #b02a37)",
+  border: "none",
+  padding: "8px 12px",
+  color: "white",
+  borderRadius: "10px",
+  fontSize: "15px",
+  fontWeight: "700",
+  letterSpacing: "0.5px",
+  cursor: "pointer",
+  boxShadow: "0 6px 15px rgba(0,0,0,0.3)",
+  transition: "all 0.2s ease"
+},
   teamBox: {
     display: "flex",
     justifyContent: "space-between",

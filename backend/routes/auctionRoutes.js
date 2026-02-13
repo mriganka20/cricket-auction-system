@@ -16,17 +16,6 @@ cloudinary.config({
 
 /* ================= MULTER CONFIG ================= */
 
-/*const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage });*/
-
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -53,17 +42,17 @@ router.get("/data", async (req, res) => {
 
 router.post("/add-player", upload.single("image"), async (req, res) => {
   try {
+    if (!req.body.name || !req.body.role)
+      return res.status(400).json({ error: "Name and Role required" });
+
     const newPlayer = new Player({
       name: req.body.name,
       role: req.body.role,
-      battingStyle: req.body.battingStyle,
-      bowlingStyle: req.body.bowlingStyle,
       basePrice: 2000,
-      cloudinaryId: result.public_id,
+      image: req.file ? req.file.path : "",
+      cloudinaryId: req.file ? req.file.filename : null,
       currentBid: 0,
-      leadingTeam: null,
-      //image: req.file ? `/uploads/${req.file.filename}` : ""
-      image: req.file ? req.file.path : ""
+      leadingTeam: null
     });
 
     await newPlayer.save();
@@ -73,6 +62,7 @@ router.post("/add-player", upload.single("image"), async (req, res) => {
     return res.status(500).json({ error: "Error adding player" });
   }
 });
+
 
 /* ================= START AUCTION (RANDOM PLAYER) ================= */
 
@@ -100,30 +90,56 @@ router.post("/bid", async (req, res) => {
   try {
     const { playerId, teamId, bidAmount } = req.body;
 
+    if (!playerId || !teamId)
+      return res.status(400).json({ error: "Team selection required" });
+
+    if (!bidAmount || bidAmount <= 0)
+      return res.status(400).json({ error: "Invalid bid amount" });
+
     const player = await Player.findById(playerId);
     if (!player)
       return res.status(400).json({ error: "Invalid player" });
 
-    const team = await Team.findById(teamId);
+    if (player.status === "sold")
+      return res.status(400).json({ error: "Player already sold" });
+
+    const team = await Team.findById(teamId).populate("players");
     if (!team)
       return res.status(400).json({ error: "Invalid team" });
 
-    if (Number(bidAmount) <= player.currentBid)
-      return res.status(400).json({ error: "Bid too low" });
+    /* ---- Squad Full Protection ---- */
+    const MAX_PLAYERS = 8;
+    const BASE_PRICE = 2000;
 
-    if (team.purse < Number(bidAmount))
-      return res.status(400).json({ error: "Insufficient balance" });
+    const playersBought = team.players.length;
+    const slotsLeft = MAX_PLAYERS - playersBought;
+
+    if (slotsLeft <= 0)
+      return res.status(400).json({ error: "Team squad full (8 players)" });
+
+    /* ---- Max Bid Restriction Logic ---- */
+    const minRequired = (slotsLeft - 1) * BASE_PRICE;
+    const maxAllowedBid = team.purse - minRequired;
+
+    if (Number(bidAmount) <= player.currentBid)
+      return res.status(400).json({ error: "Bid must be higher than current bid" });
+
+    if (Number(bidAmount) > maxAllowedBid)
+      return res.status(400).json({
+        error: `Maximum allowed bid is ₹${maxAllowedBid}`
+      });
 
     /* ---- Refund Previous Leading Team ---- */
     if (player.leadingTeam) {
       const previousTeam = await Team.findOne({ name: player.leadingTeam });
+
       if (previousTeam) {
         previousTeam.purse += player.currentBid;
         await previousTeam.save();
       }
     }
 
-    /* ---- Deduct New Bid ---- */
+    /* ---- Deduct From Current Team ---- */
     team.purse -= Number(bidAmount);
 
     player.currentBid = Number(bidAmount);
@@ -134,7 +150,8 @@ router.post("/bid", async (req, res) => {
 
     return res.json({
       currentBid: player.currentBid,
-      leadingTeam: player.leadingTeam
+      leadingTeam: player.leadingTeam,
+      purse: team.purse
     });
 
   } catch (err) {
@@ -143,21 +160,40 @@ router.post("/bid", async (req, res) => {
   }
 });
 
+
 /* ================= CLOSE AUCTION ================= */
 
 router.post("/close", async (req, res) => {
   try {
     const { playerId } = req.body;
 
+    if (!playerId)
+      return res.status(400).json({ error: "Invalid request" });
+
     const player = await Player.findById(playerId);
-    if (!player || !player.leadingTeam)
+    if (!player)
+      return res.status(400).json({ error: "Player not found" });
+
+    if (!player.leadingTeam)
       return res.status(400).json({ error: "No bids placed" });
 
+    if (player.status === "sold")
+      return res.status(400).json({ error: "Player already sold" });
+
+    const team = await Team.findOne({ name: player.leadingTeam }).populate("players");
+
+    if (!team)
+      return res.status(400).json({ error: "Invalid team" });
+
+    /* ---- Squad Limit Protection ---- */
+    if (team.players.length >= 8)
+      return res.status(400).json({ error: "Team already has 8 players" });
+
+    /* ---- Finalize Sale ---- */
     player.status = "sold";
-    player.soldTo = player.leadingTeam;
+    player.soldTo = team.name;
     player.soldPrice = player.currentBid;
 
-    const team = await Team.findOne({ name: player.leadingTeam });
     team.players.push(player._id);
 
     await player.save();
@@ -169,6 +205,7 @@ router.post("/close", async (req, res) => {
     return res.status(500).json({ error: "Error closing auction" });
   }
 });
+
 
 /* ================= RESET AUCTION ================= */
 
@@ -325,8 +362,8 @@ router.get("/summary-pdf", async (req, res) => {
       doc.text("Sold Price", col3, tableTop);
 
       doc.moveTo(col1, tableTop + 15)
-         .lineTo(550, tableTop + 15)
-         .stroke();
+        .lineTo(550, tableTop + 15)
+        .stroke();
 
       let rowY = tableTop + 25;
       let totalSpent = 0;
@@ -408,6 +445,5 @@ router.delete("/delete-player/:id", async (req, res) => {
     return res.status(500).json({ error: "Delete failed" });
   }
 });
-
 
 module.exports = router;

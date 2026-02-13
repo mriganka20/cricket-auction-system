@@ -61,7 +61,7 @@ const styles = {
     right: "40px",
     display: "flex",
     gap: "25px",
-    fontSize: "16px",
+    fontSize: "18px",
     fontWeight: "600",
     color: "#ffd700",
     cursor: "pointer"

@@ -88,7 +88,7 @@ const styles = {
 
     wrapper: {
         flex: 1,
-        padding: "10px 80px 30px 80px",  // reduced top padding
+        padding: "20px",  // reduced top padding
         color: "white"
     },
 
@@ -105,20 +105,22 @@ const styles = {
         color: "white",
         fontWeight: "bold",
         cursor: "pointer",
-        marginBottom: "30px"
+        marginBottom: "15px"
     },
 
     teamCard: {
         background: "#0c0c0c",
-        padding: "12px 30px",
+        padding: "10px 30px",
         borderRadius: "16px",
-        marginBottom: "30px",
-        border: "1px solid rgba(255,215,0,0.3)"
+        marginBottom: "20px",
+        border: "1px solid rgba(255,215,0,0.3)",
+        width: "92%"
     },
 
     teamName: {
         fontSize: "20px",
-        marginBottom: "15px",
+        marginBottom: "10px",
+        marginTop: "10px",
         color: "#ffd700"
     },
 
