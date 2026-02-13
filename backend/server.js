@@ -1,3 +1,5 @@
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
 const path = require("path");
 
@@ -5,6 +7,12 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const app = express();
 app.use(cors());
@@ -15,7 +23,7 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err => console.log(err));
 
 // Image Storage Config
-const storage = multer.diskStorage({
+/*const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
@@ -25,7 +33,17 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));*/
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "cricket-auction",
+    allowed_formats: ["jpg", "jpeg", "png"],
+  }
+});
+
+const upload = multer({ storage });
 
 const auctionRoutes = require("./routes/auctionRoutes");
 app.use("/api", auctionRoutes);

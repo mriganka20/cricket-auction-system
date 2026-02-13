@@ -2,18 +2,36 @@ const express = require("express");
 const router = express.Router();
 const Player = require("../models/Player");
 const Team = require("../models/Team");
-const multer = require("multer");
-const path = require("path");
+//const path = require("path");
 const PDFDocument = require("pdfkit");
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 /* ================= MULTER CONFIG ================= */
 
-const storage = multer.diskStorage({
+/*const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });*/
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "cricket-auction",
+    allowed_formats: ["jpg", "jpeg", "png"]
   }
 });
 
@@ -45,7 +63,8 @@ router.post("/add-player", upload.single("image"), async (req, res) => {
       basePrice: 2000,
       currentBid: 0,
       leadingTeam: null,
-      image: req.file ? `/uploads/${req.file.filename}` : ""
+      //image: req.file ? `/uploads/${req.file.filename}` : ""
+      image: req.file ? req.file.path : ""
     });
 
     await newPlayer.save();
