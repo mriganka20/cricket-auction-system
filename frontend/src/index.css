@@ -23,7 +23,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;   /* 🔥 prevents page scroll */
+  
 }
 
 @keyframes soldZoom {
@@ -79,6 +79,29 @@ html, body {
     transform: rotate(360deg);
   }
 }
+
+@media (min-width: 768px) {
+  .desktopNav {
+    display: flex !important;
+  }
+
+  .hamburger {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+
+  .desktopNav {
+    display: flex !important;
+  }
+
+  .hamburger {
+    display: none !important;
+  }
+}
+
+
 
 
 

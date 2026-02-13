@@ -163,7 +163,7 @@ export default function Auction() {
           <button style={styles.closeBtn} onClick={closeAuction}>Close</button>
         </div>
 
-        <h3 style={{ ...styles.title, marginTop: "25px" }}>Team Wallet</h3>
+        <h3 style={{ ...styles.title, marginTop: "25px", marginBottom: "10px" }}>Team Wallet</h3>
 
         {teams.map(t => (
           <div key={t._id} style={styles.teamBox}>
@@ -189,21 +189,24 @@ const styles = {
     flex: "1 1 500px",
     display: "flex",
     justifyContent: "center",
+    marginTop: "8px",
     alignItems: "flex-start" // prevents vertical stretch
   },
   rightPanel: {
-    width: "420px",
+    width: "300px",
     background: "#000",
     border: "2px solid #ffd700",
     borderRadius: "20px",
     padding: "5px 15px 10px 15px", // 🔥 reduced top padding
     display: "flex",
     flex: "1 1 200px",
-    flexDirection: "column"
+    flexDirection: "column",
+    marginTop: "8px"
   },
   title: {
     color: "#ffd700",
-    marginBottom: "15px"
+    marginBottom: "3px",
+    marginTop: "4px"
   },
   input: {
     width: "100%",
@@ -213,39 +216,39 @@ const styles = {
     border: "1px solid #444",
     background: "#222",
     color: "#fff",
-    fontSize: "15px",
+    fontSize: "14.5px",
     boxSizing: "border-box"   // ✅ ADD THIS
   },
   btnRow: {
     display: "flex",
     gap: "10px"
   },
-bidBtn: {
-  flex: 1,
-  background: "#28a745",
-  border: "none",
-  padding: "8px 12px",   // slightly taller
-  color: "white",
-  borderRadius: "8px",
-  fontSize: "15px",       // 🔥 increased
-  fontWeight: "700",      // 🔥 bold
-  letterSpacing: "0.5px",
-  cursor: "pointer"
-},
+  bidBtn: {
+    flex: 1,
+    background: "#28a745",
+    border: "none",
+    padding: "8px 12px",   // slightly taller
+    color: "white",
+    borderRadius: "8px",
+    fontSize: "15px",       // 🔥 increased
+    fontWeight: "700",      // 🔥 bold
+    letterSpacing: "0.5px",
+    cursor: "pointer"
+  },
   closeBtn: {
-  flex: 1,
-  background: "linear-gradient(135deg, #dc3545, #b02a37)",
-  border: "none",
-  padding: "8px 12px",
-  color: "white",
-  borderRadius: "10px",
-  fontSize: "15px",
-  fontWeight: "700",
-  letterSpacing: "0.5px",
-  cursor: "pointer",
-  boxShadow: "0 6px 15px rgba(0,0,0,0.3)",
-  transition: "all 0.2s ease"
-},
+    flex: 1,
+    background: "linear-gradient(135deg, #dc3545, #b02a37)",
+    border: "none",
+    padding: "8px 12px",
+    color: "white",
+    borderRadius: "10px",
+    fontSize: "15px",
+    fontWeight: "700",
+    letterSpacing: "0.5px",
+    cursor: "pointer",
+    boxShadow: "0 6px 15px rgba(0,0,0,0.3)",
+    transition: "all 0.2s ease"
+  },
   teamBox: {
     display: "flex",
     justifyContent: "space-between",
@@ -289,8 +292,8 @@ bidBtn: {
     animation: "broadcastPulse 3s infinite ease-in-out"
   },
   logo: {
-    width: "240px",
-    height: "240px",
+    width: "210px",
+    height: "210px",
     borderRadius: "50%",
     objectFit: "contain",
     zIndex: 2
@@ -309,7 +312,8 @@ bidBtn: {
     fontSize: "32px",
     fontWeight: "700",
     letterSpacing: "1.5px",
-    marginBottom: "35px",
+    marginBottom: "20px",
+    marginTop: "0px",
     background: "linear-gradient(90deg, #ffd700, #ffffff)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",

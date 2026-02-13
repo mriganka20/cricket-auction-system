@@ -1,31 +1,62 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const isSummary = location.pathname === "/summary";
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div
-      style={{
-        ...styles.wrapper,
-        overflowY: isSummary ? "auto" : "hidden"
-      }}
-    >
+    <div style={styles.wrapper}>
+
       {/* HEADER */}
       <div style={styles.header}>
-        <div style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
-          🏏 Patuli Cricket League
+
+        {/* HAMBURGER ICON */}
+        <div
+          style={styles.hamburger}
+          className="hamburger"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          ☰
         </div>
 
-        <div style={styles.navLinks}>
-          <span onClick={() => navigate("/")}>Auction</span>
-          <span onClick={() => navigate("/players")}>All Players</span>
-          <span onClick={() => navigate("/summary")}>Summary</span>
+        <div
+          style={styles.title}
+          onClick={() => navigate("/")}
+        >
+          🏏 Patuli Cricket League Auction
+        </div>
+
+        {/* DESKTOP NAV */}
+        <div style={styles.desktopNav} className="desktopNav">
+          <span onClick={() => navigate("/")} style={styles.navLink}>
+            Auction
+          </span>
+          <span onClick={() => navigate("/players")} style={styles.navLink}>
+            All Players
+          </span>
+          <span onClick={() => navigate("/summary")} style={styles.navLink}>
+            Summary
+          </span>
         </div>
       </div>
 
+      {/* MOBILE DRAWER */}
+      {menuOpen && (
+        <div style={styles.mobileMenu}>
+          <div onClick={() => { navigate("/"); setMenuOpen(false); }} style={styles.mobileItem}>
+            Auction
+          </div>
+          <div onClick={() => { navigate("/players"); setMenuOpen(false); }} style={styles.mobileItem}>
+            All Players
+          </div>
+          <div onClick={() => { navigate("/summary"); setMenuOpen(false); }} style={styles.mobileItem}>
+            Summary
+          </div>
+        </div>
+      )}
+
+      {/* PAGE CONTENT */}
       <div style={styles.pageContent}>
         {children}
       </div>
@@ -34,43 +65,80 @@ export default function Layout({ children }) {
 }
 
 const styles = {
+
   wrapper: {
-    height: "100vh",   // MUST BE height, not minHeight
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #0a4f5c, #001a23)",
     display: "flex",
     flexDirection: "column",
-    background: "linear-gradient(135deg, #0a4f5c, #001a23)",
     color: "white",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
   },
 
   header: {
-    height: "55px",
-    flexShrink: 0,   // 🔥 IMPORTANT
+    height: "50px",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    fontSize: "24px",
-    fontWeight: "bold",
-    background: "rgba(0,0,0,0.9)",
-    borderBottom: "2px solid #ffd700"
+    justifyContent: "center",   // center container
+    background: "#000",
+    borderBottom: "2px solid #ffd700",
+    position: "relative"
   },
 
-  navLinks: {
+  title: {
+    position: "absolute",   // 👈 makes it truly center
+    left: "50%",
+    transform: "translateX(-50%)",
+    fontSize: "22px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    textAlign: "center"
+  },
+
+  hamburger: {
     position: "absolute",
-    right: "40px",
-    display: "flex",
+    left: "20px",
+    fontSize: "24px",
+    cursor: "pointer"
+  },
+
+  desktopNav: {
+    position: "absolute",
+    right: "20px",
+    display: "none",
     gap: "25px",
     fontSize: "18px",
-    fontWeight: "600",
+  },
+
+  navLink: {
     color: "#ffd700",
-    cursor: "pointer"
+    cursor: "pointer",
+    fontWeight: "600"
+  },
+
+  mobileMenu: {
+    position: "absolute",
+    top: "60px",
+    left: 0,
+    width: "200px",
+    background: "#111",
+    borderRight: "2px solid #ffd700",
+    padding: "15px 0",
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+    zIndex: 999
+  },
+
+  mobileItem: {
+    padding: "10px 20px",
+    cursor: "pointer",
+    fontWeight: "600",
+    color: "#ffd700"
   },
 
   pageContent: {
     flex: 1,
-    overflowY: "auto",   // 🔥 THIS ENABLES SCROLL
-    padding: "20px 60px"
+    padding: "6px 35px 0px 35px"
   }
 };
-

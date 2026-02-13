@@ -61,7 +61,7 @@ const styles = {
   card: {
     background: "#111",
     borderRadius: "12px",
-    padding: "10px",
+    padding: "8px",
     textAlign: "center"
   },
   image: {

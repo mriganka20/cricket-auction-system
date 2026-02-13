@@ -113,6 +113,7 @@ const styles = {
   card: {
     width: "100%",
     maxWidth: "480px",
+    marginTop: "-50px",
     background: "rgba(0,0,0,0.9)",
     borderRadius: "18px",
     padding: "25px",
@@ -123,7 +124,8 @@ const styles = {
   title: {
     textAlign: "center",
     fontSize: "22px",
-    marginBottom: "20px",
+    marginBottom: "8px",
+    marginTop: "5px",
     color: "#ffd700",
     letterSpacing: "1px"
   },
@@ -140,7 +142,7 @@ const styles = {
   },
 
   label: {
-    fontSize: "15px",
+    fontSize: "16px",
     marginBottom: "5px",
     opacity: 0.9
   },

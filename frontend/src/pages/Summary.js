@@ -89,7 +89,8 @@ const styles = {
     wrapper: {
         flex: 1,
         padding: "20px",  // reduced top padding
-        color: "white"
+        color: "white",
+        overflowY: "auto"
     },
 
     title: {

@@ -50,7 +50,7 @@ const styles = {
     maxWidth: "650px",
     background: "#1a1a1a",
     borderRadius: "20px",
-    padding: "17px",
+    padding: "13px",
     border: "3px solid #ffd700",
     margin: 0,
     boxShadow: "0 0 30px rgba(255,215,0,0.3)"
@@ -66,7 +66,7 @@ const styles = {
 
   image: {
     width: "100%",
-    height: "305px",
+    height: "295px",
     objectFit: "contain",   // 👈 shows full image
     background: "#000",     // keeps black background
     display: "block"
@@ -116,7 +116,7 @@ const styles = {
     marginTop: "8px",
     background: "linear-gradient(135deg, #222, #000)",
     borderRadius: "14px",
-    padding: "8px 12px",   // 🔥 reduced top & bottom padding
+    padding: "6px 8px",   // 🔥 reduced top & bottom padding
     textAlign: "center",
     border: "2px solid #ffd700",
     display: "flex",
