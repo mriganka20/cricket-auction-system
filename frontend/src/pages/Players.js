@@ -23,7 +23,8 @@ export default function Players() {
           <div key={p._id} style={styles.card}>
             <img
               //src={`http://localhost:5000${p.image}`}
-              src={`${process.env.REACT_APP_API_URL.replace("/api", "")}${p.image}`}
+              //src={`${process.env.REACT_APP_API_URL.replace("/api", "")}${p.image}`}
+              src={p.image || "https://via.placeholder.com/300x300?text=No+Image"}
               alt={p.name}
               style={styles.image}
             />
