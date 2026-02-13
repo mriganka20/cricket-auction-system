@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const playerSchema = new mongoose.Schema({
   name: String,
   department: String,
@@ -9,6 +10,7 @@ const playerSchema = new mongoose.Schema({
   battingStyle: String,
   bowlingStyle: String,
   image: String,
+  cloudinaryId: String,
   status: { type: String, default: "pending" },
   soldTo: String,
   soldPrice: Number,

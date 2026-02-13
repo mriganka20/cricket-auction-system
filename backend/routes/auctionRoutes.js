@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Player = require("../models/Player");
 const Team = require("../models/Team");
-//const path = require("path");
+const path = require("path");
 const PDFDocument = require("pdfkit");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
@@ -55,12 +55,11 @@ router.post("/add-player", upload.single("image"), async (req, res) => {
   try {
     const newPlayer = new Player({
       name: req.body.name,
-      department: req.body.department,
-      year: req.body.year,
       role: req.body.role,
       battingStyle: req.body.battingStyle,
       bowlingStyle: req.body.bowlingStyle,
       basePrice: 2000,
+      cloudinaryId: result.public_id,
       currentBid: 0,
       leadingTeam: null,
       //image: req.file ? `/uploads/${req.file.filename}` : ""
@@ -361,5 +360,54 @@ router.get("/summary-pdf", async (req, res) => {
     res.status(500).json({ error: "PDF Export failed" });
   }
 });
+
+/* DELETE ALL PLAYERS */
+router.delete("/delete-all-players", async (req, res) => {
+  try {
+    await Player.deleteMany({});
+    return res.json({ success: true });
+  } catch (err) {
+    return res.status(500).json({ error: "Error deleting players" });
+  }
+});
+
+/* DELETE PLAYER COMPLETELY */
+router.delete("/delete-player/:id", async (req, res) => {
+  try {
+    const player = await Player.findById(req.params.id);
+
+    if (!player)
+      return res.status(404).json({ error: "Player not found" });
+
+    /* Refund Team if Sold */
+    if (player.soldTo) {
+      const team = await Team.findOne({ name: player.soldTo });
+
+      if (team) {
+        team.players = team.players.filter(
+          p => p.toString() !== player._id.toString()
+        );
+
+        team.purse += player.soldPrice || 0;
+        await team.save();
+      }
+    }
+
+    /* Delete from Cloudinary */
+    if (player.cloudinaryId) {
+      await cloudinary.uploader.destroy(player.cloudinaryId);
+    }
+
+    /* Delete Player */
+    await Player.findByIdAndDelete(req.params.id);
+
+    return res.json({ success: true });
+
+  } catch (err) {
+    console.error("DELETE ERROR:", err);
+    return res.status(500).json({ error: "Delete failed" });
+  }
+});
+
 
 module.exports = router;

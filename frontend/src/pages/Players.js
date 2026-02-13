@@ -28,8 +28,8 @@ export default function Players() {
               alt={p.name}
               style={styles.image}
             />
-            <h3>{p.name}</h3>
-            <p>₹ {p.basePrice}</p>
+            <h3 style={styles.playerName}>{p.name}</h3>
+            <p style={styles.price}>₹ {p.basePrice}</p>
             {p.status === "sold" && (
               <div style={styles.sold}>SOLD</div>
             )}
@@ -57,8 +57,8 @@ const styles = {
   },
   image: {
     width: "100%",
-    height: "180px",
-    objectFit: "cover",
+    height: "200px",
+    objectFit: "contain",
     borderRadius: "10px"
   },
   sold: {
@@ -66,5 +66,18 @@ const styles = {
     padding: "5px",
     borderRadius: "6px",
     marginTop: "5px"
+  },
+  playerName: {
+    fontSize: "20px",
+    fontWeight: "600",
+    margin: "12px 0 4px 0",   // 🔥 reduce bottom gap
+    color: "#fff",
+    letterSpacing: "0.5px"
+  },
+  price: {
+    fontSize: "16px",
+    color: "#ffd700",
+    fontWeight: "600",
+    margin: "0"              // 🔥 remove default paragraph margin
   }
 };
