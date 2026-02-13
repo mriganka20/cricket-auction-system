@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 export default function Summary() {
 
     const [teams, setTeams] = useState([]);
+    const API = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         fetchSummary();
     }, []);
 
     const fetchSummary = async () => {
-        const res = await axios.get("/api/data");
+        const res = await axios.get(`${API}/data`);
         setTeams(res.data.teams);
     };
 

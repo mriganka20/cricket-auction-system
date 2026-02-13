@@ -39,84 +39,84 @@ export default function Auction() {
     setLeadingTeam("None");
   };
 
-const placeBid = async () => {
-  try {
-     if (!bid) {
-    alert("Enter bid amount");
-    return;
-  }
-    const res = await axios.post("/api/bid", {
+  const placeBid = async () => {
+    try {
+      if (!bid) {
+        alert("Enter bid amount");
+        return;
+      }
+      const res = await axios.post(`${API}/bid`, {
+        playerId: player._id,
+        teamId: selectedTeam,
+        bidAmount: Number(bid)
+      });
+
+      console.log("Bid response:", res.data);   // debug
+
+      setCurrentBid(res.data.currentBid);
+      setLeadingTeam(res.data.leadingTeam);
+
+      fetchData();   // refresh wallet values
+
+    } catch (err) {
+      console.log("FULL ERROR:", err);
+      console.log("SERVER ERROR:", err.response?.data);
+      alert(err.response?.data?.error || "Bid failed");
+    }
+  };
+
+  const closeAuction = async () => {
+    if (!player || !selectedTeam) return;
+
+    setShowSold(true);
+
+    await axios.post(`${API}/close`, {
       playerId: player._id,
       teamId: selectedTeam,
-      bidAmount: Number(bid)
+      bidAmount: currentBid
     });
 
-    console.log("Bid response:", res.data);   // debug
+    // Wait for SOLD animation
+    setTimeout(async () => {
 
-    setCurrentBid(res.data.currentBid);
-    setLeadingTeam(res.data.leadingTeam);
+      const res = await axios.post(`${API}/start`);
 
-    fetchData();   // refresh wallet values
+      if (!res.data) {
+        setPlayer(null); // no more players
+      } else {
+        setPlayer(res.data);
+        setCurrentBid(res.data.basePrice);
+        setBid(res.data.basePrice);
+        setLeadingTeam("None");
+      }
 
-  } catch (err) {
-  console.log("FULL ERROR:", err);
-  console.log("SERVER ERROR:", err.response?.data);
-  alert(err.response?.data?.error || "Bid failed");
-}
-};
+      setSelectedTeam("");
+      setShowSold(false);
 
-const closeAuction = async () => {
-  if (!player || !selectedTeam) return;
-
-  setShowSold(true);
-
-  await axios.post(`${API}/close`, {
-    playerId: player._id,
-    teamId: selectedTeam,
-    bidAmount: currentBid
-  });
-
-  // Wait for SOLD animation
-  setTimeout(async () => {
-
-    const res = await axios.post(`${API}/start`);
-
-    if (!res.data) {
-      setPlayer(null); // no more players
-    } else {
-      setPlayer(res.data);
-      setCurrentBid(res.data.basePrice);
-      setBid(res.data.basePrice);
-      setLeadingTeam("None");
-    }
-
-    setSelectedTeam("");
-    setShowSold(false);
-
-  }, 10000);
-};
+    }, 10000);
+  };
 
   if (!player) {
     return (
       <div style={styles.startScreen}>
 
-{/* LOGO */}
-  <div style={styles.logoWrapper}>
-    <img src={pclLogo} alt="PCL Logo" style={styles.logo} />
-    <div style={styles.lightSweep}></div>
-  </div>
+        {/* LOGO */}
+        <div style={styles.logoWrapper}>
+          <img src={pclLogo} alt="PCL Logo" style={styles.logo} />
+          <div style={styles.lightSweep}></div>
+        </div>
 
-  {/* TITLE */}
-  <h1 style={styles.startTitle}>
-    Welcome to Patuli Cricket League Auction
-  </h1>
+        {/* TITLE */}
+        <h1 style={styles.startTitle}>
+          Welcome to Patuli Cricket League Auction
+        </h1>
 
-  {/* BUTTON */}
-  <button style={styles.startBtn} onClick={startAuction}>
-    START AUCTION
-  </button>
+        {/* BUTTON */}
+        <button style={styles.startBtn} onClick={startAuction}>
+          START AUCTION
+        </button>
 
-</div>
+      </div>
 
     );
   }
@@ -182,36 +182,36 @@ const styles = {
     justifyContent: "center",
     alignItems: "flex-start"
   },
-leftPanel: {
-  flex: 1,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "flex-start" // prevents vertical stretch
-},
-rightPanel: {
-  width: "420px",
-  background: "#000",
-  border: "2px solid #ffd700",
-  borderRadius: "20px",
-  padding: "5px 15px 10px 15px", // 🔥 reduced top padding
-  display: "flex",
-  flexDirection: "column"
-},
+  leftPanel: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start" // prevents vertical stretch
+  },
+  rightPanel: {
+    width: "420px",
+    background: "#000",
+    border: "2px solid #ffd700",
+    borderRadius: "20px",
+    padding: "5px 15px 10px 15px", // 🔥 reduced top padding
+    display: "flex",
+    flexDirection: "column"
+  },
   title: {
     color: "#ffd700",
     marginBottom: "15px"
   },
   input: {
-  width: "100%",
-  padding: "12px 15px",
-  marginBottom: "12px",
-  borderRadius: "8px",
-  border: "1px solid #444",
-  background: "#222",
-  color: "#fff",
-  fontSize: "15px",
-  boxSizing: "border-box"   // ✅ ADD THIS
-},
+    width: "100%",
+    padding: "12px 15px",
+    marginBottom: "12px",
+    borderRadius: "8px",
+    border: "1px solid #444",
+    background: "#222",
+    color: "#fff",
+    fontSize: "15px",
+    boxSizing: "border-box"   // ✅ ADD THIS
+  },
   btnRow: {
     display: "flex",
     gap: "10px"
@@ -247,15 +247,15 @@ rightPanel: {
     color: "#ffd700",
     fontWeight: "600"
   },
-startScreen: {
-  flex: 1,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  textAlign: "center",
-  paddingTop: "18px"
-},
+  startScreen: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    paddingTop: "18px"
+  },
   startBtn: {
     background: "#ffd700",
     padding: "15px 30px",
@@ -263,55 +263,55 @@ startScreen: {
     fontSize: "18px",
     border: "none"
   },
-logoWrapper: {
-  position: "relative",
-  width: "260px",
-  height: "260px",
-  borderRadius: "50%",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  marginBottom: "45px",   // 🔥 spacing between logo & text
-  animation: "broadcastPulse 3s infinite ease-in-out"
-},
-logo: {
-  width: "240px",
-  height: "240px",
-  borderRadius: "50%",
-  objectFit: "contain",
-  zIndex: 2
-},
-lightSweep: {
-  position: "absolute",
-  width: "120%",
-  height: "120%",
-  borderRadius: "50%",
-  background:
-    "linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%)",
-  animation: "lightMove 3s infinite",
-  zIndex: 1
-},
-startTitle: {
-  fontSize: "32px",
-  fontWeight: "700",
-  letterSpacing: "1.5px",
-  marginBottom: "35px",
-  background: "linear-gradient(90deg, #ffd700, #ffffff)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  textShadow: "0 0 15px rgba(255,215,0,0.6)"
-},
-startBtn: {
-  background: "linear-gradient(135deg, #ffd700, #ffaa00)",
-  color: "#000",
-  padding: "16px 45px",
-  border: "none",
-  borderRadius: "50px",
-  fontSize: "18px",
-  fontWeight: "800",
-  letterSpacing: "2px",
-  cursor: "pointer",
-  boxShadow: "0 0 25px rgba(255,215,0,0.6)",
-  transition: "0.3s"
-}
+  logoWrapper: {
+    position: "relative",
+    width: "260px",
+    height: "260px",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: "45px",   // 🔥 spacing between logo & text
+    animation: "broadcastPulse 3s infinite ease-in-out"
+  },
+  logo: {
+    width: "240px",
+    height: "240px",
+    borderRadius: "50%",
+    objectFit: "contain",
+    zIndex: 2
+  },
+  lightSweep: {
+    position: "absolute",
+    width: "120%",
+    height: "120%",
+    borderRadius: "50%",
+    background:
+      "linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%)",
+    animation: "lightMove 3s infinite",
+    zIndex: 1
+  },
+  startTitle: {
+    fontSize: "32px",
+    fontWeight: "700",
+    letterSpacing: "1.5px",
+    marginBottom: "35px",
+    background: "linear-gradient(90deg, #ffd700, #ffffff)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    textShadow: "0 0 15px rgba(255,215,0,0.6)"
+  },
+  startBtn: {
+    background: "linear-gradient(135deg, #ffd700, #ffaa00)",
+    color: "#000",
+    padding: "16px 45px",
+    border: "none",
+    borderRadius: "50px",
+    fontSize: "18px",
+    fontWeight: "800",
+    letterSpacing: "2px",
+    cursor: "pointer",
+    boxShadow: "0 0 25px rgba(255,215,0,0.6)",
+    transition: "0.3s"
+  }
 };

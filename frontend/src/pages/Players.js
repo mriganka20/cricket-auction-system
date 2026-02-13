@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 export default function Players() {
 
   const [players, setPlayers] = useState([]);
-
+  const API = process.env.REACT_APP_API_URL;
   useEffect(() => {
     fetchPlayers();
   }, []);
 
   const fetchPlayers = async () => {
-    const res = await axios.get("/api/data");
+    const res = await axios.get(`${API}/data`);
     setPlayers(res.data.players);
   };
 
