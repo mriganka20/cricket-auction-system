@@ -24,7 +24,7 @@ export default function Layout({ children }) {
           style={styles.title}
           onClick={() => navigate("/")}
         >
-          🏏 Patuli Cricket League Auction
+          🏏 Patuli Cricket League
         </div>
 
         {/* DESKTOP NAV */}
