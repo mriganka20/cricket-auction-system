@@ -22,7 +22,8 @@ export default function Players() {
         {players.map(p => (
           <div key={p._id} style={styles.card}>
             <img
-              src={`http://localhost:5000${p.image}`}
+              //src={`http://localhost:5000${p.image}`}
+              src={`${process.env.REACT_APP_API_URL.replace("/api", "")}${p.image}`}
               alt={p.name}
               style={styles.image}
             />

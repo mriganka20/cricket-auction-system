@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export default function Status() {
 
   const [players,setPlayers] = useState([]);
-  const API = "https://your-backend-url.onrender.com/api";
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(()=>{
     fetchData();

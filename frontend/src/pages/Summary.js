@@ -15,11 +15,13 @@ export default function Summary() {
     };
 
     const exportExcel = () => {
-        window.open("http://localhost:5000/api/summary-export");
+        //window.open("http://localhost:5000/api/summary-export");
+        window.open(`${process.env.REACT_APP_API_URL}/summary-export`);
     };
 
     const exportPDF = () => {
-        window.open("http://localhost:5000/api/summary-pdf");
+        //window.open("http://localhost:5000/api/summary-pdf");
+        window.open(`${process.env.REACT_APP_API_URL}/summary-pdf`);
     };
 
 

@@ -6,7 +6,8 @@ export default function AddPlayer() {
   const [form,setForm] = useState({});
   const [image,setImage] = useState(null);
 
-  const API = "http://localhost:5000/api";
+  //const API = "http://localhost:5000/api";
+  const API = process.env.REACT_APP_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
