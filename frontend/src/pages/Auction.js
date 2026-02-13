@@ -13,7 +13,7 @@ export default function Auction() {
   const [leadingTeam, setLeadingTeam] = useState("None");
   const [showSold, setShowSold] = useState(false);
 
-  const API = "/api";
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     fetchData();

@@ -1,8 +1,8 @@
 export default function PlayerCard({ player, currentBid, leadingTeam, showSold }) {
 
-  const imageUrl = player.image
-    ? `http://localhost:5000${player.image}`
-    : "https://via.placeholder.com/800x500?text=No+Image";
+const imageUrl = player.image
+  ? `${process.env.REACT_APP_API_URL.replace("/api","")}${player.image}`
+  : "https://via.placeholder.com/800x500?text=No+Image";
 
   return (
     <div style={styles.stage}>
