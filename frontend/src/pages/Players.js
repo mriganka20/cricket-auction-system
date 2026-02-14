@@ -62,7 +62,8 @@ const styles = {
     background: "#111",
     borderRadius: "12px",
     padding: "8px",
-    textAlign: "center"
+    textAlign: "center",
+    marginBottom: "10px"
   },
   image: {
     width: "100%",

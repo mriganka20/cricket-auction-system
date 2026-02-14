@@ -193,7 +193,7 @@ const styles = {
     alignItems: "flex-start" // prevents vertical stretch
   },
   rightPanel: {
-    width: "300px",
+    width: "30px",
     background: "#000",
     border: "2px solid #ffd700",
     borderRadius: "20px",
@@ -201,7 +201,7 @@ const styles = {
     display: "flex",
     flex: "1 1 200px",
     flexDirection: "column",
-    marginTop: "8px"
+    marginTop: "8px",
   },
   title: {
     color: "#ffd700",

@@ -25,6 +25,25 @@ export default function Summary() {
         window.open(`${process.env.REACT_APP_API_URL}/summary-pdf`);
     };
 
+    const resetAuction = async () => {
+        const confirmReset = window.confirm(
+            "Are you sure you want to reset the entire auction?"
+        );
+
+        if (!confirmReset) return;
+
+        try {
+            await axios.post(`${API}/reset`);
+
+            alert("Auction Reset Successful");
+
+            fetchSummary(); // refresh page data
+
+        } catch (err) {
+            alert("Reset Failed");
+            console.error(err);
+        }
+    };
 
     return (
         <div style={styles.wrapper}>
@@ -37,6 +56,10 @@ export default function Summary() {
 
                 <button style={styles.exportBtn} onClick={exportPDF}>
                     Export to PDF
+                </button>
+
+                <button style={styles.exportBtn} onClick={resetAuction}>
+                    Reset Auction
                 </button>
             </div>
 
